@@ -98,6 +98,10 @@ class TaskQueue:
                 return task
         return None
 
+    def clear(self) -> None:
+        """Очистить очередь"""
+        self._tasks.clear()
+
     # протокол итерации
 
     def __iter__(self) -> TaskIterator:
