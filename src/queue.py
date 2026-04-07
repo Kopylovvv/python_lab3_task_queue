@@ -137,18 +137,13 @@ class TaskQueue:
             if task.status_enum == status:
                 yield task
 
-    def filter_by_priority(self, priority: Priority, include_higher: bool = False) -> Iterator[Task]:
+    def filter_by_priority(self, priority: Priority) -> Iterator[Task]:
         """
         фильтрация задач по приоритету.
-        если include_higher = true, возвращает задачи с приоритетом >= указанного
         """
         for task in self._tasks:
-            if include_higher:
-                if task.priority_enum.value >= priority.value:
-                    yield task
-            else:
-                if task.priority_enum == priority:
-                    yield task
+            if task.priority_enum.value == priority.value:
+                yield task
 
     def filter(self, predicate: Callable[[Task], bool]) -> Iterator[Task]:
         """фильтрация по пользовательскому предикату"""
@@ -187,8 +182,8 @@ class TaskQueue:
         return list(self.filter(lambda t: t.is_finished))
 
     def get_high_priority(self) -> list[Task]:
-        """возвращает список высокоприоритетных задач (high и critical)"""
-        return list(self.filter_by_priority(Priority.HIGH, include_higher=True))
+        """возвращает список высокоприоритетных задач (high)"""
+        return list(self.filter_by_priority(Priority.HIGH))
 
     def get_low_priority(self) -> list[Task]:
         """возвращает список низкоприоритетных задач (low)"""
